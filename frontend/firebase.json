@@ -1,0 +1,14 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "deadness-84106",
+          "configurations": {
+            "web": "1:443186945149:web:03c1273213b7938a27e514"
+          }
+        }
+      }
+    }
+  }
+}

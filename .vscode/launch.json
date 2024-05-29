@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch receiver",
+      "url": "http://localhost:8000/test/test.html"
+    },
+    {
+      "type": "dart",
+      "request": "launch",
+      "name": "Launch frontend",
+      "flutterMode": "debug",
+      "args": [
+        "--web-port",
+        "8080"
+      ]
+    },
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "matches",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "matches",
+      "fieldPath": "expireAt",
+      "ttl": true,
+      "indexes": []
+    }
+  ]
+}
