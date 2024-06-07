@@ -11,6 +11,28 @@
       "fieldPath": "expireAt",
       "ttl": true,
       "indexes": []
+    },
+    {
+      "collectionGroup": "players",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "players",
+      "fieldPath": "expireAt",
+      "ttl": true,
+      "indexes": []
+    },
+    {
+      "collectionGroup": "registrations",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "registrations",
+      "fieldPath": "expireAt",
+      "ttl": true,
+      "indexes": []
     }
   ]
 }

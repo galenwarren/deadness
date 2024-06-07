@@ -6,22 +6,42 @@ part of 'model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CroquetBallImpl _$$CroquetBallImplFromJson(Map<String, dynamic> json) =>
-    _$CroquetBallImpl(
-      ballColor: $enumDecode(_$CroquetBallColorEnumMap, json['ballColor']),
-      deadOnBalls: (json['deadOnBalls'] as List<dynamic>)
-          .map((e) => $enumDecode(_$CroquetBallColorEnumMap, e))
+_$CroquetDeadnessImpl _$$CroquetDeadnessImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CroquetDeadnessImpl(
+      clearedWickets: Map<String, int>.from(json['clearedWickets'] as Map),
+      deadnessClasses: (json['deadnessClasses'] as List<dynamic>)
+          .map((e) => e as String)
           .toList(),
-      clearedWicketIndex: (json['clearedWicketIndex'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$CroquetBallImplToJson(_$CroquetBallImpl instance) =>
+Map<String, dynamic> _$$CroquetDeadnessImplToJson(
+        _$CroquetDeadnessImpl instance) =>
     <String, dynamic>{
-      'ballColor': _$CroquetBallColorEnumMap[instance.ballColor]!,
-      'deadOnBalls': instance.deadOnBalls
-          .map((e) => _$CroquetBallColorEnumMap[e]!)
-          .toList(),
-      'clearedWicketIndex': instance.clearedWicketIndex,
+      'clearedWickets': instance.clearedWickets,
+      'deadnessClasses': instance.deadnessClasses,
+    };
+
+_$CroquetRegistrationImpl _$$CroquetRegistrationImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CroquetRegistrationImpl(
+      expireAt: DateTime.parse(json['expireAt'] as String),
+      matchId: json['matchId'] as String,
+      userId: json['userId'] as String,
+      playing: (json['playing'] as Map<String, dynamic>).map(
+        (k, e) =>
+            MapEntry($enumDecode(_$CroquetBallColorEnumMap, k), e as bool),
+      ),
+    );
+
+Map<String, dynamic> _$$CroquetRegistrationImplToJson(
+        _$CroquetRegistrationImpl instance) =>
+    <String, dynamic>{
+      'expireAt': instance.expireAt.toIso8601String(),
+      'matchId': instance.matchId,
+      'userId': instance.userId,
+      'playing': instance.playing
+          .map((k, e) => MapEntry(_$CroquetBallColorEnumMap[k]!, e)),
     };
 
 const _$CroquetBallColorEnumMap = {
@@ -31,20 +51,38 @@ const _$CroquetBallColorEnumMap = {
   CroquetBallColor.yellow: 'yellow',
 };
 
+_$CroquetPlayerImpl _$$CroquetPlayerImplFromJson(Map<String, dynamic> json) =>
+    _$CroquetPlayerImpl(
+      expireAt: DateTime.parse(json['expireAt'] as String),
+      matchId: json['matchId'] as String,
+      ballColor: $enumDecode(_$CroquetBallColorEnumMap, json['ballColor']),
+      deadOn: (json['deadOn'] as Map<String, dynamic>).map(
+        (k, e) =>
+            MapEntry($enumDecode(_$CroquetBallColorEnumMap, k), e as bool),
+      ),
+      clearedWicket: (json['clearedWicket'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$CroquetPlayerImplToJson(_$CroquetPlayerImpl instance) =>
+    <String, dynamic>{
+      'expireAt': instance.expireAt.toIso8601String(),
+      'matchId': instance.matchId,
+      'ballColor': _$CroquetBallColorEnumMap[instance.ballColor]!,
+      'deadOn': instance.deadOn
+          .map((k, e) => MapEntry(_$CroquetBallColorEnumMap[k]!, e)),
+      'clearedWicket': instance.clearedWicket,
+    };
+
 _$CroquetMatchImpl _$$CroquetMatchImplFromJson(Map<String, dynamic> json) =>
     _$CroquetMatchImpl(
-      id: json['id'] as String,
       expireAt: DateTime.parse(json['expireAt'] as String),
-      balls: (json['balls'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry($enumDecode(_$CroquetBallColorEnumMap, k),
-            CroquetBall.fromJson(e as Map<String, dynamic>)),
-      ),
+      id: json['id'] as String,
+      wicketCount: (json['wicketCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$CroquetMatchImplToJson(_$CroquetMatchImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'expireAt': instance.expireAt.toIso8601String(),
-      'balls': instance.balls
-          .map((k, e) => MapEntry(_$CroquetBallColorEnumMap[k]!, e.toJson())),
+      'id': instance.id,
+      'wicketCount': instance.wicketCount,
     };

@@ -1,15 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/router.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({
+    super.key,
+    required this.userCredential,
+  });
+
+  final UserCredential userCredential;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Deadness Board',
-      routerConfig: router,
+      routerConfig: router(userCredential),
       theme: ThemeData(
         // This is the theme of your application.
         //

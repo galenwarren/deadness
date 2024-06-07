@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/state/active_balls.dart';
+import 'package:frontend/state/model_cubit.dart';
 import 'package:frontend/state/model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -15,17 +15,17 @@ class SettingsPage extends StatelessWidget {
         QrImageView(
           data: data,
           version: QrVersions.auto,
-          size: 200,
+          size: 150,
         ),
         ...CroquetBallColor.values.map((ballColor) {
-          final value = context.select<ActiveBallsCubit, bool>(
-              (bloc) => bloc.isActive(ballColor));
+          final value = context.select<CroquetModelCubit, bool>(
+              (bloc) => bloc.isPlaying(ballColor));
           return Switch(
             value: value,
             activeColor: ballColor.color,
             inactiveThumbColor: ballColor.color,
             onChanged: (value) {
-              context.read<ActiveBallsCubit>().setActive(ballColor, value);
+              context.read<CroquetModelCubit>().setPlaying(ballColor, value);
             },
           );
         }),

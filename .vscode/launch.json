@@ -5,7 +5,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch receiver",
-      "url": "http://localhost:8000/test/test.html"
+      "url": "http://localhost:8000/public/test.html"
     },
     {
       "type": "dart",

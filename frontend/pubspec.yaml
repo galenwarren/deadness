@@ -45,6 +45,9 @@ dependencies:
   qr_flutter: ^4.1.0
   flutter_bloc: ^8.1.5
   rxdart: ^0.27.7
+  responsive_grid: ^2.4.4
+  firebase_auth: ^4.20.0
+  provider: ^6.1.2
   
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,1 @@
+const jsonContentType = "application/json";

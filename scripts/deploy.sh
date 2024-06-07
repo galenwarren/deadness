@@ -8,7 +8,12 @@ ROOT_PATH="$SCRIPT_FOLDER/.."
 gcloud storage buckets update gs://croquet-deadness-board --cors-file="$ROOT_PATH/receiver/config/cors.json"
 
 # copy files
-gcloud storage cp "$ROOT_PATH/receiver/public/*" gs://croquet-deadness-board
+rm -rf "$ROOT_PATH/receiver/staging"
+mkdir -p "$ROOT_PATH/receiver/staging"
+cp "$ROOT_PATH/receiver/public/receiver.html" "$ROOT_PATH/receiver/staging"
+# cp "$ROOT_PATH/receiver/public/component.js" "$ROOT_PATH/receiver/staging"
+minify "$ROOT_PATH/receiver/public/component.js" >> "$ROOT_PATH/receiver/staging/component.js"
+gcloud storage rsync "$ROOT_PATH/receiver/staging" gs://croquet-deadness-board
 
 # build the frontend
 (

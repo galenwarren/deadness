@@ -79,9 +79,10 @@
           }
         )
       },
-      castData(dataUri, contentType) {
+      castData(matchId, deadnessJson, contentType) {
         var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-        var mediaInfo = new chrome.cast.media.MediaInfo(dataUri, contentType);
+        var mediaInfo = new chrome.cast.media.MediaInfo(matchId, contentType);
+        mediaInfo.customData = deadnessJson;
         var request = new chrome.cast.media.LoadRequest(mediaInfo);
         return castSession.loadMedia(request);
       }
