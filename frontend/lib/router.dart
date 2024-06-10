@@ -46,7 +46,7 @@ GoRouter router(UserCredential userCredential) {
                       ),
                       SizedBox(
                         height: 32,
-                        width: 32,
+                        width: 40,
                         child: Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 4,

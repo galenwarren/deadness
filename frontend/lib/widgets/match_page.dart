@@ -96,7 +96,7 @@ class _MatchPageState extends State<MatchPage> {
     return Column(
       children: [
         Expanded(
-          flex: 3,
+          flex: 2,
           child: PageView(
             controller: _pageController,
             children: [

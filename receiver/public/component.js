@@ -9,9 +9,11 @@
   const black = 'black';
   const yellow = 'yellow';
   const playerWidth = 'player-width';
-  const playerFontSize = 'player-font-size';
   const gridGap = 'grid-gap';
   const transitionTime = 'transition-time';
+  const borderWidth = 'border-width';
+  const shadowLength = 'shadow-length';
+  const shadowRadius = 'shadow-radius';
 
   // the balls, in order
   const colors = [blue, red, black, yellow];
@@ -24,33 +26,99 @@
   customAttributes[black] = black;
   customAttributes[yellow] = yellow;
   customAttributes[playerWidth] = '1.5fr';
-  customAttributes[playerFontSize] = '5vh';
   customAttributes[gridGap] = '5vh';
   customAttributes[transitionTime] = '2s';
+  customAttributes[borderWidth] = '0.5rem';
+  customAttributes[shadowLength] = '0.5rem';
+  customAttributes[shadowRadius] = '0.5rem';
 
   // CroquetDeadnessBoard custom element
   class CroquetDeadnessBoard extends HTMLElement {
 
-    // we watch for changes on these attributes
+    // we watch for changes on all attributes
     static observedAttributes = Object.keys(customAttributes);
 
-    // stylesheet
-    #styleSheet;
+    // stylesheets
+    #baseStyleSheet;
+    #connectedStyleSheet;
+
+    // track connected status
+    #connected = false;
 
     constructor() {
       super();
       const shadowRoot = this.attachShadow({ mode: 'open' });
 
       // create a stylesheet add to the shadow root
-      this.#styleSheet = new CSSStyleSheet();
-      shadowRoot.adoptedStyleSheets.push(this.#styleSheet);
+      this.#baseStyleSheet = new CSSStyleSheet();
+      this.#connectedStyleSheet = new CSSStyleSheet();
+      shadowRoot.adoptedStyleSheets = [this.#baseStyleSheet, this.#connectedStyleSheet];
 
-      // initially just set host to block and hidden
-      this.#styleSheet.replaceSync(`      
+      // set the base style sheet
+      this.#baseStyleSheet.replaceSync(`      
       :host {
         display: block;
         visibility: hidden;
+        overflow: hidden;
       }
+      div.container {
+        transform: rotate3d(0, 0, 0, 0deg);
+        display: grid;
+        box-sizing: border-box;
+        height: 100%;
+        grid-template-rows: [blue] 1fr [red] 1fr [black] 1fr [yellow] 1fr;
+      }
+      div.player {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+      }
+      div.card {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        display: inline-block;
+      }
+      div.face {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        backface-visibility: hidden;
+      }
+      div.face.front {
+        transform: rotate3d(1, 1, 0, 45deg);
+      }
+      div.dead > div.face.front {
+        transform: rotate3d(1, 1, 0, 225deg);
+      }
+      div.face.back {
+        transform: rotate3d(1, 1, 0, 225deg);
+      }
+      div.dead > div.face.back {
+        transform: rotate3d(1, 1, 0, 45deg);
+      }
+      div.face.front {
+        border-style: solid;
+        background-color: white;
+      }
+      div.blue {
+        color: white;
+      }
+      div.red {
+        color: white;
+      }
+      div.black {
+        color: white;
+      }
+      div.yellow {
+        color: black;
+      }      
       `);
 
       // create the container element
@@ -68,21 +136,29 @@
         playerElement.setAttribute('grid-column', 'player');
         container.appendChild(playerElement);
 
-        // add the deadness element
+        // process each player color
         for (const deadnessColor of colors) {
-          const element = document.createElement('div');
-          element.setAttribute('grid-row', playerColor);
-          element.setAttribute('grid-column', deadnessColor);
+
+          // add the deadness element
+          const deadnessElement = document.createElement('div');
+          deadnessElement.setAttribute('grid-row', playerColor);
+          deadnessElement.setAttribute('grid-column', deadnessColor);
+          container.appendChild(deadnessElement);
+
+          // make into a card with content for colors other than the player's
           if (deadnessColor != playerColor) {
-            element.classList.add('deadness', `${playerColor}-on-${deadnessColor}`);
+
+            // make this element into a card
+            deadnessElement.classList.add('card', `${playerColor}-on-${deadnessColor}`);
+
+            // add the card faces
             const frontFaceElement = document.createElement('div');
-            frontFaceElement.classList.add('face', 'front');
-            element.appendChild(frontFaceElement);
+            frontFaceElement.classList.add('face', 'front', deadnessColor);
+            deadnessElement.appendChild(frontFaceElement);
             const backFaceElement = document.createElement('div');
             backFaceElement.classList.add('face', 'back', deadnessColor);
-            element.appendChild(backFaceElement);
+            deadnessElement.appendChild(backFaceElement);
           }
-          container.appendChild(element);
         }
       }
     }
@@ -92,91 +168,58 @@
       return value ? value : customAttributes[name];
     }
 
-    #updateStyle(visibility) {
+    #updateStyle() {
+      // if not connected, clear the connected stylesheet
+      if (!this.#connected) {
+        this.#connectedStyleSheet.replaceSync('');
+      }
+
+      // otherwise, populate it
       const gridGapValue = this.#getAttribute(gridGap);
       const playerWidthValue = this.#getAttribute(playerWidth);
-      const playerFontSizeValue = this.#getAttribute(playerFontSize);
       const transitionTimeValue = this.#getAttribute(transitionTime);
       const blueValue = this.#getAttribute(blue);
       const blackValue = this.#getAttribute(black);
       const yellowValue = this.#getAttribute(yellow);
       const redValue = this.#getAttribute(red);
+      const borderWidthValue = this.#getAttribute(borderWidth);
+      const shadowLengthValue = this.#getAttribute(shadowLength);
+      const shadowRadiusValue = this.#getAttribute(shadowRadius);
 
-      this.#styleSheet.replaceSync(`
+      this.#connectedStyleSheet.replaceSync(`
       :host {
-        display: block;
-        visibility: ${visibility};
+        visibility: visible !important;
       }
       div.container {
-        transform: rotate3d(0);
-        display: grid;
-        box-sizing: border-box;
-        height: 100%;
-        grid-template-rows: [blue] 1fr [red] 1fr [black] 1fr [yellow] 1fr;
+        padding: calc(${gridGapValue} / 2);
         grid-template-columns: [player] ${playerWidthValue} [blue] 1fr [red] 1fr [black] 1fr [yellow] 1fr;
-        grid-gap: ${gridGapValue};
-        padding: ${gridGapValue};
+        grid-gap: calc(${gridGapValue} / 2);
       }
-      div.player {
-        font-size: ${playerFontSizeValue};
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      div.card {
+        filter: drop-shadow(${shadowLengthValue} ${shadowLengthValue} ${shadowRadiusValue});
       }
-
-      div.deadness {
-        position: relative;
-      }
-
       div.face {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
         transition: transform ${transitionTimeValue};
       }
-
       div.face.front {
-        transform: rotate3d(1, 1, 0, 0deg);
-      }
-
-      div.dead > div.face.front {
-        transform: rotate3d(1, 1, 0, 180deg);
-      }
-
-      div.face.back {
-        transform: rotate3d(1, 1, 0, 180deg);
-      }
-
-      div.dead > div.face.back {
-        transform: rotate3d(1, 1, 0, 0deg);
-      }
-
-      div.face.front {
-        background-color: whitesmoke;
+        border-width: ${borderWidthValue};
         color: ${blackValue};
       }
-      
       div.blue {
         background-color: ${blueValue};
-        color: white;
+        border-color: ${blueValue};
       }
-      
       div.red {
         background-color: ${redValue};
-        color: white;
+        border-color: ${redValue};
       }
-      
       div.black {
         background-color: ${blackValue};
-        color: white;
+        border-color: ${blackValue};
       }
-      
       div.yellow {
         background-color: ${yellowValue};
-        color: black;
+        border-color: ${yellowValue};
       }      
       `);
     }
@@ -185,23 +228,20 @@
 
       // read and parse the model
       const modelJson = this.#getAttribute(model);
-      if (!modelJson) {
-        throw new Error('model attribute is required');
-      }
-      const modelValue = JSON.parse(modelJson);
+      const modelValue = modelJson ? JSON.parse(modelJson) : null;
 
       // modify the markup
       for (const ballColor of colors) {
         // update the cleared wicket indicator
         const element = this.shadowRoot.querySelector(`div.player.${ballColor} `);
-        element.textContent = modelValue.clearedWickets[ballColor];
+        element.textContent = modelValue ? modelValue.clearedWickets[ballColor] : 0;
 
         // update the deadness of all the balls
         for (const deadnessColor of colors) {
           if (ballColor != deadnessColor) {
             const className = `${ballColor}-on-${deadnessColor}`;
-            const element = this.shadowRoot.querySelector(`div.deadness.${className}`);
-            if (modelValue.deadnessClasses.includes(className)) {
+            const element = this.shadowRoot.querySelector(`div.card.${className}`);
+            if (modelValue && modelValue.deadnessClasses.includes(className)) {
               element.classList.add('dead');
             } else {
               element.classList.remove('dead');
@@ -212,12 +252,14 @@
     }
 
     connectedCallback() {
+      this.#connected = true;
       this.#updateModel();
-      this.#updateStyle('visible');
+      this.#updateStyle();
     }
 
     disconnectedCallback() {
-      this.#updateStyle('hidden');
+      this.#connected = false;
+      this.#updateStyle();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -225,7 +267,7 @@
         case 'model':
           this.#updateModel();
         default:
-          this.#updateStyle('visible');
+          this.#updateStyle();
       }
     }
   }

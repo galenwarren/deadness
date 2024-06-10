@@ -64,6 +64,6 @@ class DeadnessPageState extends State<DeadnessPage> {
   @override
   Widget build(BuildContext context) {
     final content = _webViewContent;
-    return WebView(key: _webViewKey, content: content);
+    return WebView(key: _webViewKey, title: 'deadness', content: content);
   }
 }

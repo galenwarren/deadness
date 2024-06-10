@@ -8,8 +8,11 @@ import 'dart:html' as html;
 class WebView extends StatefulWidget {
   const WebView({
     super.key,
+    required this.title,
     required this.content,
   });
+
+  final String title;
 
   final String content;
 
@@ -32,12 +35,12 @@ class WebViewState extends State<WebView> {
       tagName: 'iframe',
       onElementCreated: (element) {
         _iframe = element as html.IFrameElement;
-        _iframe.onLoad.first.then((value) {
-          _loaded.complete();
-        });
+        _iframe.title = widget.title;
+        _iframe.height = '100%';
+        _iframe.width = '100%';
+        _iframe.style.margin = '0';
         _iframe.style.border = 'none';
-        _iframe.style.height = '100%';
-        _iframe.style.width = '100%';
+        _iframe.onLoad.first.then((value) => _loaded.complete());
         _iframe.srcdoc = widget.content;
       },
     );

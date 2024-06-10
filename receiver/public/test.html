@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -11,14 +11,15 @@
 
     croquet-deadness-board {
       height: 100vh;
+      font-size: 10vh;
+      margin: 0;
     }
   </style>
   <script type="application/javascript" src="component.js"></script>
 </head>
 
 <body>
-  <croquet-deadness-board
-    model='{"clearedWickets":{"blue":0,"black":0,"yellow":0,"red":0},"deadnessClasses":["blue-on-red","blue-on-black","blue-on-yellow","black-on-blue","black-on-red","black-on-yellow","yellow-on-blue","yellow-on-red","yellow-on-black","red-on-blue","red-on-black","red-on-yellow"]}' />
+  <croquet-deadness-board />
 </body>
 
 </html>
