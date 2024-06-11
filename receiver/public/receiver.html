@@ -28,9 +28,10 @@
       playerManager = context.getPlayerManager(),
       deadnessElement = document.querySelector('croquet-deadness-board');
 
-    // intercept load messages
+    // intercept load messages and update the model
     playerManager.setMessageInterceptor(cast.framework.messages.MessageType.LOAD, event => {
-      return null;
+      const board = document.querySelector('croquet-deadness-board');
+      board.setAttribute('model', event.media.customData);
     });
 
     // create the options for the receiver. 

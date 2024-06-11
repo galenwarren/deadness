@@ -92,16 +92,16 @@
         backface-visibility: hidden;
       }
       div.face.front {
-        transform: rotate3d(1, 1, 0, 45deg);
+        transform: rotate3d(1, 1, 0, 0deg);
       }
       div.dead > div.face.front {
-        transform: rotate3d(1, 1, 0, 225deg);
+        transform: rotate3d(1, 1, 0, 180deg);
       }
       div.face.back {
-        transform: rotate3d(1, 1, 0, 225deg);
+        transform: rotate3d(1, 1, 0, 180deg);
       }
       div.dead > div.face.back {
-        transform: rotate3d(1, 1, 0, 45deg);
+        transform: rotate3d(1, 1, 0, 360deg);
       }
       div.face.front {
         border-style: solid;

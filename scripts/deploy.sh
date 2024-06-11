@@ -11,8 +11,8 @@ gcloud storage buckets update gs://croquet-deadness-board --cors-file="$ROOT_PAT
 rm -rf "$ROOT_PATH/receiver/staging"
 mkdir -p "$ROOT_PATH/receiver/staging"
 cp "$ROOT_PATH/receiver/public/receiver.html" "$ROOT_PATH/receiver/staging"
-# cp "$ROOT_PATH/receiver/public/component.js" "$ROOT_PATH/receiver/staging"
-minify "$ROOT_PATH/receiver/public/component.js" >> "$ROOT_PATH/receiver/staging/component.js"
+cp "$ROOT_PATH/receiver/public/component.js" "$ROOT_PATH/receiver/staging"
+# minify "$ROOT_PATH/receiver/public/component.js" >> "$ROOT_PATH/receiver/staging/component.js"
 gcloud storage rsync "$ROOT_PATH/receiver/staging" gs://croquet-deadness-board
 
 # build the frontend
